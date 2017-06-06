@@ -1,31 +1,34 @@
 import numpy as np
 import pandas as pd
 
-df = pd.DataFrame(pd.read_excel('df.xlsx'))
-df['id'].drop_duplicates()
+df = pd.DataFrame(pd.read_excel('df.xlsx')) #导入已有的一个数据表
+df['id'].drop_duplicates()#数据的一些基础处理
 df['price'].fillna(df['price'].mean())
 df['city'] = df['city'].map(str.strip)
 df['city'] = df['city'].str.lower()
 df1 = pd.DataFrame({"id":[1,2,3,4,5,6,7,8],"gender":['male','female','male','male','female','male','male','male'],"pay":['y','n','y','n','y','y','y','y',],
-                    "m-point":[10,29,39,10,37,49,45,32]})
+                    "m-point":[10,29,39,10,37,49,45,32]}) #创建一个新的数据表
 df1['id'].drop_duplicates()
 
-
+#合并两个数据表
 df_merge = pd.merge(df,df1,how='inner')
 df_merge.set_index('id')
 df_merge.sort_index()
 print(df_merge)
 
 
-
+#分组函数
 def group(array1):
     array1['group'] = np.where(array1['price']>3000,'high','low')
 
-
+#分列函数
 def splitdf(array1):
     splitlist=pd.DataFrame((x.split('-') for x in array1['category']),index=array1.index,columns=['catogory','size'])
     array2 = pd.merge(array1,splitlist,right_index=True,left_index=True)
     print(array2)
+    
+    
+#输入一个指令来选择进行哪项数据处理
 comm2 = 'Y'
 if comm2 == 'Y':
     commond = input('请输入指令：')

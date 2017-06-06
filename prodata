@@ -1,0 +1,40 @@
+import numpy as np
+import pandas as pd
+
+df = pd.DataFrame(pd.read_excel('df.xlsx'))
+df['id'].drop_duplicates()
+df['price'].fillna(df['price'].mean())
+df['city'] = df['city'].map(str.strip)
+df['city'] = df['city'].str.lower()
+df1 = pd.DataFrame({"id":[1,2,3,4,5,6,7,8],"gender":['male','female','male','male','female','male','male','male'],"pay":['y','n','y','n','y','y','y','y',],
+                    "m-point":[10,29,39,10,37,49,45,32]})
+df1['id'].drop_duplicates()
+
+
+df_merge = pd.merge(df,df1,how='inner')
+df_merge.set_index('id')
+df_merge.sort_index()
+print(df_merge)
+
+
+
+def group(array1):
+    array1['group'] = np.where(array1['price']>3000,'high','low')
+
+
+def splitdf(array1):
+    splitlist=pd.DataFrame((x.split('-') for x in array1['category']),index=array1.index,columns=['catogory','size'])
+    array2 = pd.merge(array1,splitlist,right_index=True,left_index=True)
+    print(array2)
+comm2 = 'Y'
+if comm2 == 'Y':
+    commond = input('请输入指令：')
+
+    if commond == '分组':
+        group(df_merge)
+        print(df_merge)
+    if commond == '分列':
+        splitdf(df_merge)
+    comm2 = input('继续请输入Y，没有后续操作请输入其他字母：\n')
+else:
+    exit()
